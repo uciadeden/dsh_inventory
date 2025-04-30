@@ -1,5 +1,5 @@
-Halaman menu
-<img src="./public/Screenshot (20).png" alt="Halaman Awal" width="100%" />
+Contoh Halaman
+<img src="./public/Cuplikan layar 2025-04-30 203927.png" alt="Halaman Awal" width="100%" />
 Sistem Prasyarat<br/>
     -PHP: ^8.1<br/>
     -Laravel Framework: ^10.10<br/>
