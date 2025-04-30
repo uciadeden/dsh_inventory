@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+        Schema::create('receipt_details', function (Blueprint $table) { $table->id();
+            $table->foreignId('receipt_id')->constrained()->onDelete('cascade');
+            $table->foreignId('transaction_detail_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity');
             // Menyimpan pengguna yang membuat post
                   $table->unsignedBigInteger('created_by')->nullable();  // Menambahkan kolom created_by
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');  // Menambahkan foreign key
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('receipt_details');
     }
 };

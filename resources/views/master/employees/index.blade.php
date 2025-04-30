@@ -16,7 +16,9 @@
         <tr>
             <th width="3%">No</th>
             <th>Nama</th>
-            <th>Deskripsi</th>
+            <th>Posisi</th>
+            <th>No Telp</th>
+            <th>Email</th>
             <th width="15%">Aksi</th>
         </tr>
     </thead>
@@ -27,7 +29,7 @@
 
 <!-- Modal untuk Create dan Edit -->
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Tambah {{ ucfirst($title) }}</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -35,18 +37,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="frm">
+                <form id="frm" class="row">
                     @csrf
-                    <div class="mb-3">
+                    <div class="mb-3 col-md-4">
                         <label for="name" class="form-label">Nama</label>
                         <input type="text" class="form-control form-control-sm" id="name" name="name" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Deskripsi</label>
-                        <textarea class="form-control form-control-sm" id="description" name="description"></textarea>
+                    <div class="mb-3 col-md-4">
+                        <label for="position" class="form-label">Posisi</label>
+                        <input type="text" class="form-control form-control-sm" id="position" name="position" required>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="phone" class="form-label">No Telp</label>
+                        <input type="text" class="form-control form-control-sm" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control form-control-sm" id="email" name="email">
                     </div>
                     <input type="hidden" id="id"> <!-- Hidden field for edit -->
-                    <button type="submit" class="btn btn-sm btn-primary float-right" id="saveBtn">Simpan</button>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-sm btn-primary float-right" id="saveBtn">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -73,7 +85,9 @@
                 searchable: false // Tidak bisa dicari
             },
             { data: 'name', name: 'name' },
-            { data: 'description', name: 'description' },
+            { data: 'position', name: 'position' },
+            { data: 'phone', name: 'phone' },
+            { data: 'email', name: 'email' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
         order: [[1, 'asc']]  // Set default urutan berdasarkan kolom kedua (title)
@@ -94,7 +108,10 @@
                 $.get('{{ url($title) }}/' + id + '/edit', function(data) {
                     $('#id').val(data.id); // Set ID in hidden input
                     $('#name').val(data.name); // Set name in input
-                    $('#description').val(data.description); // Set description in textarea
+                    $('#contact_phone').val(data.contact_phone); // Set description in textarea
+                    $('#contact_name').val(data.contact_name); // Set description in textarea
+                    $('#email').val(data.email); // Set description in textarea
+                    $('#address').val(data.address); // Set description in textarea
                     $('#modalLabel').text('Edit'); // Change modal title
                     $('#savePostBtn').text('Perbaharui'); // Change button text
                     $('#modal').modal('show'); // Show the modal
@@ -135,15 +152,15 @@
                    // Pastikan server mengirimkan JSON error message dengan properti 'message'
                    let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan yang tidak diketahui.';
                    
-               Swal.fire({
-                icon: 'error',
-                title: 'Aduhh...',
-                text: errorMessage,
-                showConfirmButton: true,
-                timer: 1500
-            });
-           }
-       });5
+                   Swal.fire({
+                    icon: 'error',
+                    title: 'Aduhh...',
+                    text: errorMessage,
+                    showConfirmButton: true,
+                    timer: 1500
+                });
+               }
+           });
             });
 
             // Delete Post (Confirmation Modal)

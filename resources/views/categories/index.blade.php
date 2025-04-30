@@ -43,7 +43,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Deskripsi</label>
-                        <textarea class="form-control form-control-sm" id="description" name="description"></textarea>
+                        <textarea class="form-control form-control-sm" id="description" name="description" required></textarea>
                     </div>
                     <input type="hidden" id="id"> <!-- Hidden field for edit -->
                     <button type="submit" class="btn btn-sm btn-primary float-right" id="saveBtn">Simpan</button>

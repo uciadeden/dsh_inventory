@@ -1,5 +1,4 @@
 <?php
-// Database/Seeders/RolePermissionSeeder.php
 
 namespace Database\Seeders;
 
@@ -16,34 +15,78 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-        // Membuat Permissions untuk CRUD
-        $createPermission = Permission::firstOrCreate(['name' => 'create posts']);
-        $editPermission = Permission::firstOrCreate(['name' => 'edit posts']);
-        $deletePermission = Permission::firstOrCreate(['name' => 'delete posts']);
-        $viewPermission = Permission::firstOrCreate(['name' => 'view posts']);
+        // Menu untuk admin (dapat CRUD semua menu)
+        $menusAdmin = [
+            'users',
+            'posts', 
+            'categories',
+            'products',
+            'suppliers',
+            'employees',
+            'transactions',
+            'transaction-sales',
+            'receipts',
+            'purchase-orders',
+            'shipments'
+        ];
 
-        // Membuat Permissions untuk CRUD
-        $createPermissionUser = Permission::firstOrCreate(['name' => 'create users']);
-        $editPermissionUser = Permission::firstOrCreate(['name' => 'edit users']);
-        $deletePermissionUser = Permission::firstOrCreate(['name' => 'delete users']);
-        $viewPermissionUser = Permission::firstOrCreate(['name' => 'view users']);
+        // Menu untuk user (CRUD pada beberapa menu)
+        $menusUser = [
+            'categories',
+            'products',
+            'suppliers',
+            'employees',
+            'transactions',
+            'transaction-sales',
+            'receipts',
+            'purchase-orders',
+            'shipments',
+            'posts', // User bisa melihat posts, tapi tidak CRUD
+        ];
 
-        // Membuat Roles
+        // Gabungkan menu admin dan user
+        $menus = array_merge($menusAdmin, $menusUser);
+
+        // Membuat Permissions untuk setiap menu
+        foreach ($menus as $menu) {
+            // CRUD permissions untuk setiap menu
+            $permissions = [
+                'create ' . $menu,
+                'edit ' . $menu,
+                'delete ' . $menu,
+                'view ' . $menu,
+            ];
+
+            // Menambahkan permissions ke database (jika belum ada)
+            foreach ($permissions as $permission) {
+                Permission::firstOrCreate(['name' => $permission]);
+            }
+        }
+
+        // Membuat Roles jika belum ada
         $adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $userRole = Role::firstOrCreate(['name' => 'User']);
 
-        // Memberikan Permissions ke Roles
-        $adminRole->givePermissionTo([
-            $createPermission, 
-            $editPermission, 
-            $deletePermission, 
-            $viewPermission,
-            $createPermissionUser, 
-            $editPermissionUser, 
-            $deletePermissionUser, 
-            $viewPermissionUser
-        ]);
-        
-        $userRole->givePermissionTo($viewPermission);  // User hanya memiliki permission untuk 'view posts'
+        // Memberikan Permissions ke Role Admin
+        $adminPermissions = Permission::all(); // Admin mendapatkan semua permissions
+        $adminRole->givePermissionTo($adminPermissions);
+
+        // Memberikan Permissions ke Role User
+        // User mendapatkan CRUD permissions untuk beberapa menu
+        foreach ($menusUser as $menu) {
+            // Untuk User hanya memberikan permission untuk 'view' saja untuk posts
+            if ($menu === 'posts') {
+                $userRole->givePermissionTo('view ' . $menu); // Hanya bisa melihat posts
+            } else {
+                // User mendapatkan CRUD permissions untuk kategori lainnya
+                $userPermissions = [
+                    'create ' . $menu,
+                    'edit ' . $menu,
+                    'delete ' . $menu,
+                    'view ' . $menu,
+                ];
+                $userRole->givePermissionTo($userPermissions);
+            }
+        }
     }
 }

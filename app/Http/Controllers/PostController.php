@@ -25,6 +25,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $title="posts";
+        $titleShow="Postingan";
         $posts = Post::all(); // Bisa diganti dengan query untuk menampilkan post tertentu
 
         if ($request->ajax()) {
@@ -37,7 +38,7 @@ class PostController extends Controller
         })
         ->make(true);
     }
-    return view('posts.index', compact('posts','title'));
+    return view('posts.index', compact('posts','title','titleShow'));
 }
 
     // Menampilkan form untuk membuat post baru
@@ -50,13 +51,13 @@ public function create()
 public function store(Request $request)
 {
     $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
     ]);
 
     $post = Post::create([
-        'title' => $request->title,
-        'content' => $request->content,
+        'name' => $request->name,
+        'description' => $request->description,
         'user_id' => Auth::id(), // Menyimpan ID pengguna yang membuat post
         'created_by' => Auth::id(), // Menyimpan ID pengguna yang membuat post
         ]);
@@ -81,13 +82,13 @@ public function edit(Post $post)
 public function update(Request $request, Post $post)
 {
     $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
     ]);
 
     $post->update([
-        'title' => $request->title,
-        'content' => $request->content,
+        'name' => $request->name,
+        'description' => $request->description,
         'updated_by' => Auth::id(), // Menyimpan ID pengguna yang membuat post
     ]);
 
@@ -113,5 +114,18 @@ public function destroy(Post $post)
         'icon' => 'success',
         'title' => 'Hapus!',
     ]);
+}
+
+    // show
+public function show()
+{
+    $post = Post::select('id','name')->get();
+    
+    return response()->json($post->map(function ($posts) {
+        return [
+            'id' => $posts->id,
+            'text' => $posts->name  // Ganti 'name' dengan field yang sesuai
+        ];
+    }));
 }
 }

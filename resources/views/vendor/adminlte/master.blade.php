@@ -131,7 +131,23 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.13/dist/sweetalert2.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
+<script>
+    // Menambahkan ikon bintang otomatis pada label dengan input required
+    document.addEventListener("DOMContentLoaded", function() {
+        const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]'); // Pilih semua elemen input, select, dan textarea yang memiliki atribut required
+        
+        requiredFields.forEach(function(field) {
+            const label = document.querySelector(`label[for="${field.id}"]`);
+            if (label) {
+                // Menambahkan span bintang merah di sebelah label
+                const star = document.createElement('span');
+                star.classList.add('text-danger');
+                star.textContent = ' *';
+                label.appendChild(star);
+            }
+        });
+    });
+</script>
 
     @endswitch
     @endif

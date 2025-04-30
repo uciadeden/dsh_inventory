@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+            $table->date('order_date');
+            $table->foreignId('supplier_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['pending', 'completed', 'cancelled']);
+            $table->decimal('total_amount', 10, 2);
             // Menyimpan pengguna yang membuat post
                   $table->unsignedBigInteger('created_by')->nullable();  // Menambahkan kolom created_by
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');  // Menambahkan foreign key
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('purchase_orders');
     }
 };

@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Menambahkan Role ke User dengan menyetel model_type secara manual
-        $adminUser->roles()->attach($adminRole->id, [
-            'model_type' => get_class($adminUser), // Menambahkan nama model secara eksplisit
-        ]);
+        // Menambahkan Role ke User jika belum ada
+        if (!$adminUser->hasRole($adminRole->name)) {
+            $adminUser->roles()->syncWithoutDetaching([$adminRole->id]);
+        }
 
         // Membuat User biasa jika belum ada
         $normalUser = User::firstOrCreate(
@@ -37,9 +37,9 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Menambahkan Role ke User dengan menyetel model_type secara manual
-        $normalUser->roles()->attach($userRole->id, [
-            'model_type' => get_class($normalUser), // Menambahkan nama model secara eksplisit
-        ]);
+        // Menambahkan Role ke User jika belum ada
+        if (!$normalUser->hasRole($userRole->name)) {
+            $normalUser->roles()->syncWithoutDetaching([$userRole->id]);
+        }
     }
 }

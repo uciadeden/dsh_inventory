@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['title', 'content', 'user_id', 'created_by', 'updated_by'];
+    protected $fillable = ['name', 'description', 'user_id', 'created_by', 'updated_by'];
 
     // Relasi ke User (User yang membuat post)
     public function user()
